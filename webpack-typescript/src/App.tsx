@@ -1,5 +1,5 @@
 import "./App.css";
-import Image from "./image.jpg";
+import Image from "./assets/image.jpg";
 import { useState } from "react";
 
 export const App = () => {
