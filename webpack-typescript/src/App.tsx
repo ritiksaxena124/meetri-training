@@ -1,5 +1,5 @@
 import "./App.css";
-import Image from "./Frame.svg";
+import Image from "./image.jpg";
 import { useState } from "react";
 
 export const App = () => {
