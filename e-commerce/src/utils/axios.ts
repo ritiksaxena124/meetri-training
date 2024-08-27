@@ -1,7 +1,8 @@
 import axios from "axios";
+import { PRODUCTS_BASE_URL } from "../constants";
 
 const client = axios.create({
-    baseURL: "https://fakestoreapi.com"
-})
+  baseURL: PRODUCTS_BASE_URL,
+});
 
-export default client
+export default client;
