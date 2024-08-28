@@ -6,7 +6,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((store) => store.cart.cartItems);
   return (
-    <div className="border border-zinc-600 p-4 rounded-md flex flex-col gap-4 transition-all hover:scale-105">
+    <div className="border border-zinc-600 p-4 rounded-md flex flex-col gap-4 hover:border-zinc-400 hover:bg-zinc-900">
       <div className="w-full h-80 bg-white flex items-center justify-center rounded-md overflow-hidden">
         <img
           src={product?.image}
