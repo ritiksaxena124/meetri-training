@@ -41,7 +41,12 @@ const Home: React.FC = () => {
       }));
       setProducts(newData);
       setFilteredData(newData);
-      setCurrentItems(newData.slice(currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT, currentPage * PRODUCTS_LIMIT))
+      setCurrentItems(
+        newData.slice(
+          currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
+          currentPage * PRODUCTS_LIMIT
+        )
+      );
       setLoading(false);
     }
 
@@ -70,17 +75,30 @@ const Home: React.FC = () => {
   }
 
   useEffect(() => {
-    if(search === ""){
-    getData();
-    }else{
-      setCurrentItems(filteredData.slice(currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT, PRODUCTS_LIMIT * currentPage))
+    if (search === "") {
+      getData();
+    } else {
+      setCurrentItems(
+        filteredData.slice(
+          currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
+          PRODUCTS_LIMIT * currentPage
+        )
+      );
     }
-
   }, [currentPage]);
 
   const filterProductsData = (category: string) => {
+    setSearch("");
+
     if (category === "all") {
-      setCurrentPage(1);
+      setCurrentPage(1)
+      setFilteredData(products);
+      setCurrentItems(
+        products.slice(
+          currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
+          PRODUCTS_LIMIT * currentPage
+        )
+      );
     } else {
       const data = products?.filter(
         (product) => product.category.toLowerCase() === category.toLowerCase()
@@ -113,16 +131,26 @@ const Home: React.FC = () => {
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setCurrentPage(1);
-    if(search!==""){
-    const data = products?.filter((product) =>
-      product?.title?.toLowerCase()?.includes(e.target.value.toLowerCase())
-    );
-    setFilteredData(data);
-    setCurrentItems(data.slice(currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT, PRODUCTS_LIMIT * currentPage))
-  }else{
-    setFilteredData(products);
-    setCurrentItems(products.slice(currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT, PRODUCTS_LIMIT * currentPage))
-  }
+    if (search !== "") {
+      const data = products?.filter((product) =>
+        product?.title?.toLowerCase()?.includes(e.target.value.toLowerCase())
+      );
+      setFilteredData(data);
+      setCurrentItems(
+        data.slice(
+          currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
+          PRODUCTS_LIMIT * currentPage
+        )
+      );
+    } else {
+      setFilteredData(products);
+      setCurrentItems(
+        products.slice(
+          currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
+          PRODUCTS_LIMIT * currentPage
+        )
+      );
+    }
   };
 
   if (loading) {
