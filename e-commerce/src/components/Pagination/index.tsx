@@ -10,7 +10,12 @@ const Pagination = ({
   currentPage: number;
   setCurrentPage: (val: number) => void;
 }) => {
-  const numberOfPages = data.length / PRODUCTS_LIMIT;
+  let numberOfPages;
+  if(data.length % PRODUCTS_LIMIT) {
+    numberOfPages =  Math.floor(data.length / PRODUCTS_LIMIT) + 1 
+  }else {
+    numberOfPages  =Math.floor(data.length / PRODUCTS_LIMIT)
+  }
   let paginationBtn: number[] = [];
 
   for (let i = 1; i <= numberOfPages; i++) {

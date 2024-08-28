@@ -28,6 +28,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentItems, setCurrentItems] = useState<ProductType[]>([]);
 
   useEffect(() => {
     async function getProductsData() {
@@ -39,40 +40,47 @@ const Home: React.FC = () => {
         price: (product.price * 83.97).toFixed(2),
       }));
       setProducts(newData);
+      setFilteredData(newData);
+      setCurrentItems(newData.slice(currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT, currentPage * PRODUCTS_LIMIT))
       setLoading(false);
     }
 
     getProductsData();
   }, []);
 
-  useEffect(() => {
+  async function getData() {
     setLoading(true);
-    async function getData() {
-      const { data } = await client.get(
-        `/products?limit=${currentPage * PRODUCTS_LIMIT}`
-      );
+    const { data } = await client.get(
+      `/products?limit=${currentPage * PRODUCTS_LIMIT}`
+    );
 
-      const newData = data?.map((product: ProductType) => ({
-        ...product,
-        price: (product.price * 83.97).toFixed(2),
-      }));
+    const newData = data?.map((product: ProductType) => ({
+      ...product,
+      price: (product.price * 83.97).toFixed(2),
+    }));
 
-      setFilteredData(
-        newData.slice(
-          (currentPage - 1) * PRODUCTS_LIMIT,
-          currentPage * PRODUCTS_LIMIT
-        )
-      );
+    setCurrentItems(
+      newData.slice(
+        (currentPage - 1) * PRODUCTS_LIMIT,
+        currentPage * PRODUCTS_LIMIT
+      )
+    );
 
-      setLoading(false);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    if(search === ""){
+    getData();
+    }else{
+      setCurrentItems(filteredData.slice(currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT, PRODUCTS_LIMIT * currentPage))
     }
 
-    getData();
   }, [currentPage]);
 
   const filterProductsData = (category: string) => {
     if (category === "all") {
-      setFilteredData(products);
+      setCurrentPage(1);
     } else {
       const data = products?.filter(
         (product) => product.category.toLowerCase() === category.toLowerCase()
@@ -104,16 +112,17 @@ const Home: React.FC = () => {
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+    setCurrentPage(1);
+    if(search!==""){
     const data = products?.filter((product) =>
       product?.title?.toLowerCase()?.includes(e.target.value.toLowerCase())
     );
-    setFilteredData(
-      data.slice(
-        (currentPage - 1) * PRODUCTS_LIMIT,
-        currentPage * PRODUCTS_LIMIT
-      )
-    );
-    setCurrentPage(1);
+    setFilteredData(data);
+    setCurrentItems(data.slice(currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT, PRODUCTS_LIMIT * currentPage))
+  }else{
+    setFilteredData(products);
+    setCurrentItems(products.slice(currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT, PRODUCTS_LIMIT * currentPage))
+  }
   };
 
   if (loading) {
@@ -183,14 +192,14 @@ const Home: React.FC = () => {
               </div>
             ) : (
               <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredData &&
-                  filteredData.map((product) => (
+                {currentItems &&
+                  currentItems.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
               </div>
             )}
             <Pagination
-              data={products}
+              data={filteredData}
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
             />
