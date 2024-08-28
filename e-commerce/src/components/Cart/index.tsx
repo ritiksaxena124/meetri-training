@@ -10,7 +10,6 @@ const Cart = () => {
   const cartItems = useAppSelector((store) => store.cart.cartItems);
   const dispatch = useAppDispatch();
   const [payableAmt, setPayableAmt] = useState<number>(0);
-  console.log(cartItems);
   useEffect(() => {
     let amt = 0;
     cartItems.map((item) => (amt += item.price * item.productCount));
@@ -21,7 +20,7 @@ const Cart = () => {
       <div className="relative h-full top-5 w-full">
         <div className="top-5 p-4 rounded-md bg-zinc-900 mb-5 w-full">
           <p className="text-lg text-zinc-400">Total payable amount</p>
-          <p className="text-3xl font-semibold tracking-wide">${payableAmt}</p>
+          <p className="text-3xl font-semibold tracking-wide">₹{payableAmt}</p>
         </div>
         <div className="">
           <div className="flex items-center justify-between">
@@ -51,7 +50,7 @@ const Cart = () => {
                         </h1>
                         <div className="flex items-center justify-between">
                           <span className="text-xl font-semibold">
-                            ${product?.price}
+                            ₹{product?.price}
                           </span>
                           <div className="flex gap-2">
                             <button

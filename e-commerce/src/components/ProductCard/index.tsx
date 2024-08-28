@@ -20,7 +20,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         100
       )}...`}</p>
       <div className="flex items-center justify-between">
-        <span className="text-xl font-semibold">${product?.price}</span>
+        <span className="text-xl font-semibold">₹{product?.price}</span>
         <div>{product?.rating?.rate}⭐</div>
       </div>
 

@@ -36,6 +36,7 @@ const Home: React.FC = () => {
       const newData = data?.map((product: ProductType) => ({
         ...product,
         productCount: 0,
+        price: (product.price * 83.97).toFixed(2),
       }));
       setProducts(newData);
       setLoading(false);
@@ -53,7 +54,7 @@ const Home: React.FC = () => {
 
       const newData = data?.map((product: ProductType) => ({
         ...product,
-        productCount: 0,
+        price: (product.price * 83.97).toFixed(2),
       }));
 
       setFilteredData(
@@ -106,7 +107,12 @@ const Home: React.FC = () => {
     const data = products?.filter((product) =>
       product?.title?.toLowerCase()?.includes(e.target.value.toLowerCase())
     );
-    setFilteredData(data.slice((currentPage - 1) * PRODUCTS_LIMIT, currentPage * PRODUCTS_LIMIT));
+    setFilteredData(
+      data.slice(
+        (currentPage - 1) * PRODUCTS_LIMIT,
+        currentPage * PRODUCTS_LIMIT
+      )
+    );
     setCurrentPage(1);
   };
 
