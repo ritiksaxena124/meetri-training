@@ -14,7 +14,7 @@ const Pagination = ({
   if(data.length % PRODUCTS_LIMIT) {
     numberOfPages =  Math.floor(data.length / PRODUCTS_LIMIT) + 1 
   }else {
-    numberOfPages  =Math.floor(data.length / PRODUCTS_LIMIT)
+    numberOfPages = Math.floor(data.length / PRODUCTS_LIMIT)
   }
   let paginationBtn: number[] = [];
 
