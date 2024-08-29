@@ -96,7 +96,10 @@ const Home: React.FC = () => {
     const filtered = products?.filter((product) =>
       product?.title?.toLowerCase().includes(search.toLowerCase())
     );
-    setCurrentItems(filtered);
+    setFilteredData(filtered);
+    if (PRODUCTS_LIMIT * currentPage > filtered?.length) {
+      setCurrentPage(1);
+    }
   }, [search]);
 
   const filterProductsData = (category: string) => {
@@ -135,27 +138,41 @@ const Home: React.FC = () => {
   const sortByPrice = (type: string) => {
     switch (type) {
       case "LOW_TO_HIGH":
-        filteredData?.sort(
-          (product1, product2) => product1.price - product2.price
-        );
-        setCurrentItems(
-          [...filteredData].slice(
-            currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
-            PRODUCTS_LIMIT * currentPage
-          )
-        );
+        if (search) {
+          filteredData?.sort(
+            (product1, product2) => product1.price - product2.price
+          );
+          setFilteredData([...filteredData]);
+        } else {
+          products?.sort(
+            (product1, product2) => product1.price - product2.price
+          );
+          setCurrentItems(
+            [...products].slice(
+              (currentPage - 1) * PRODUCTS_LIMIT,
+              currentPage * PRODUCTS_LIMIT
+            )
+          );
+        }
         break;
 
       case "HIGH_TO_LOW":
-        filteredData?.sort(
-          (product1, product2) => product2.price - product1.price
-        );
-        setCurrentItems(
-          [...filteredData].slice(
-            currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
-            PRODUCTS_LIMIT * currentPage
-          )
-        );
+        if (search) {
+          filteredData?.sort(
+            (product1, product2) => product2.price - product1.price
+          );
+          setFilteredData([...filteredData]);
+        } else {
+          products?.sort(
+            (product1, product2) => product2.price - product1.price
+          );
+          setCurrentItems(
+            [...products].slice(
+              (currentPage - 1) * PRODUCTS_LIMIT,
+              currentPage * PRODUCTS_LIMIT
+            )
+          );
+        }
         break;
       default:
         console.log("error sorting products by price");
@@ -165,32 +182,18 @@ const Home: React.FC = () => {
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-    setCurrentPage(1);
-    if (search !== "") {
-      const data = products?.filter((product) =>
-        product?.title?.toLowerCase()?.includes(e.target.value.toLowerCase())
-      );
-      setFilteredData(data);
-      setCurrentItems(
-        data.slice(
-          currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
-          PRODUCTS_LIMIT * currentPage
-        )
-      );
-    } else {
-      setFilteredData(products);
-      setCurrentItems(
-        products.slice(
-          currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
-          PRODUCTS_LIMIT * currentPage
-        )
-      );
-    }
   };
 
   if (loading) {
     return <Loader />;
   }
+
+  const itemsToDisplay = search
+    ? filteredData.slice(
+        (currentPage - 1) * PRODUCTS_LIMIT,
+        currentPage * PRODUCTS_LIMIT
+      )
+    : currentItems;
 
   return (
     <>
@@ -231,7 +234,7 @@ const Home: React.FC = () => {
               />
 
               {/* Filter by price */}
-              {/* <div className="space-y-4 basis-1/2">
+              <div className="space-y-4 basis-1/2">
                 <h2 className="text-xl text-zinc-400">Sort by price</h2>
                 <div className="flex gap-4">
                   <button
@@ -247,7 +250,7 @@ const Home: React.FC = () => {
                     High to Low
                   </button>
                 </div>
-              </div> */}
+              </div>
             </div>
 
             <div className="w-full h-[1px] bg-zinc-600" />
@@ -257,8 +260,8 @@ const Home: React.FC = () => {
               </div>
             ) : (
               <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                {currentItems &&
-                  currentItems.map((product) => (
+                {itemsToDisplay &&
+                  itemsToDisplay.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
               </div>
@@ -268,7 +271,6 @@ const Home: React.FC = () => {
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
             />
-            {/* <p className="mt-5 text-zinc-400 text-center text-xl">No more results</p> */}
           </div>
           <div className="w-full lg:w-1/4 border-t lg:border-t-0 lg:border-l border-zinc-600 py-5 lg:py-0 px-5 relative">
             <Cart />
