@@ -54,4 +54,42 @@ export class AuthService {
       throw error;
     }
   }
+
+  async loginUser(dto: UserDTO) {
+    try {
+      // check if any user with the given email exists in the database
+      const user = await this.prisma.user.findUnique({
+        where: {
+          email: dto.email,
+        },
+      });
+
+      // throw error if no user with the given email exists
+      if (!user) {
+        throw new ForbiddenException('Credentials Invalid');
+      }
+      // check if the password given is correct
+      const isPasswordCorrect = await bcrypt.compare(dto.password, user.hash);
+      console.log(isPasswordCorrect);
+      // throw error if the password doesn't match
+      if (!isPasswordCorrect) {
+        throw new ForbiddenException('Credentials Invalid');
+      }
+
+      // password matches - send the access_token to frontend
+      const payload = { sub: user.id, email: user.email };
+      return {
+        access_token: await this.jwt.signAsync(payload, {
+          secret: this.config.get('JWT_SECRET'),
+          expiresIn: '60m',
+        }),
+      };
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        throw new ForbiddenException('Credentials Invalid');
+      }
+
+      throw error;
+    }
+  }
 }
