@@ -5,6 +5,7 @@ import { loginUserDTO, registerUserDTO } from 'src/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -57,7 +58,7 @@ export class AuthService {
     }
   }
 
-  async loginUser(dto: loginUserDTO) {
+  async loginUser(dto: loginUserDTO, response: Response) {
     try {
       // check if any user with the given email exists in the database
       const user = await this.prisma.user.findUnique({
@@ -80,12 +81,18 @@ export class AuthService {
 
       // password matches - send the access_token to frontend
       const payload = { sub: user.id, email: user.email };
+      const access_token = await this.jwt.signAsync(payload, {
+        secret: this.config.get('JWT_SECRET'),
+        expiresIn: '60m',
+      });
+
+      response.cookie('access_token', `Bearer ${access_token}`, {
+        httpOnly: true,
+      });
+
       return {
         msg: 'User logged in successfully',
-        access_token: await this.jwt.signAsync(payload, {
-          secret: this.config.get('JWT_SECRET'),
-          expiresIn: '60m',
-        }),
+        access_token,
       };
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
