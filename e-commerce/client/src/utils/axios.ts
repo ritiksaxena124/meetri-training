@@ -1,8 +1,8 @@
 import axios from "axios";
-import { PRODUCTS_BASE_URL } from "../constants";
+import { PRODUCTS_BASE_URL, BACKEND_API } from "../constants";
 
 const client = axios.create({
-  baseURL: PRODUCTS_BASE_URL,
+  baseURL: BACKEND_API,
 });
 
 export default client;
