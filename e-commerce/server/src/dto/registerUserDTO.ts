@@ -1,8 +1,8 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class UserDTO {
+export class registerUserDTO {
+  @IsNotEmpty()
   @IsString()
-  @IsOptional()
   firstName: string;
 
   @IsString()
@@ -18,14 +18,12 @@ export class UserDTO {
   password: string;
 
   @IsString()
-  @IsOptional()
   phone: string;
 
-  //   @IsString()
-  //   @IsOptional()
-  //   address: string;
-
-  //   @IsString()
-  //   @IsOptional()
-  //   cart: string[];
+  // @IsString()
+  // @IsOptional()
+  // address: {
+  //   state: string;
+  //   pincode: string;
+  // };
 }
