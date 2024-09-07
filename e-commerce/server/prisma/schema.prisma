@@ -20,32 +20,27 @@ model User {
   lastName  String
   hash      String
   phone     String
-  // addressId Int      @default(-1)
-  // address   Address  @relation(fields: [addressId], references: [id])
-  // cart      String[]
+  role      String[] @default(["customer"])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Address {
-  id           Int    @unique @default(autoincrement())
-  addressLine1 String
-  addressLine2 String
-  city         String
-  state        String
-  postalCode   String
-  country      String
-  // User         User[]
-}
-
 model Product {
-  id                 Int      @unique @default(autoincrement())
-  name               String
-  description        String
-  price              Int
-  category           String
-  productImgURL      String
-  discountPercentage Float
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                  Int      @unique @default(autoincrement())
+  title               String
+  description         String
+  category            String
+  price               Float
+  discountPercentage  Float
+  rating              Float
+  stock               Int
+  tags                String[]
+  brand               String
+  warrantyInformation String
+  shippingInformation String
+  availabilityStatus  String
+  returnPolicy        String
+  thumbnail           String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
