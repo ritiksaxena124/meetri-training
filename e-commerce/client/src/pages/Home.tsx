@@ -1,8 +1,7 @@
 import Loader from "../components/Loader";
 import ProductCard from "../components/ProductCard";
-import client from "../utils/axios";
-
-import { ChangeEvent, useDeferredValue, useEffect, useState } from "react";
+import { productClient } from "../utils/axios";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import InputField from "../components/InputField";
 import Pagination from "../components/Pagination";
 import { PRODUCTS_LIMIT } from "../constants";
@@ -37,8 +36,8 @@ const Home: React.FC = () => {
     async function getProductsData() {
       setLoading(true);
       if (currCategory === "all") {
-        const { data } = await client.get(`/products`);
-        const newData = data?.map((product: ProductType) => ({
+        const { data } = await productClient.get(`/products`);
+        const newData = data.products?.map((product: ProductType) => ({
           ...product,
           productCount: 0,
           price: (product.price * 83.97).toFixed(2),
@@ -59,8 +58,10 @@ const Home: React.FC = () => {
           )
         );
       } else {
-        const { data } = await client.get(`/products/category/${currCategory}`);
-        const newData = data?.map((product: ProductType) => ({
+        const { data } = await productClient.get(
+          `/products/category/${currCategory}`
+        );
+        const newData = data.products?.map((product: ProductType) => ({
           ...product,
           productCount: 0,
           price: (product.price * 83.97).toFixed(2),
@@ -84,11 +85,11 @@ const Home: React.FC = () => {
 
   async function getData() {
     setLoading(true);
-    const { data } = await client.get(
+    const { data } = await productClient.get(
       `/products?limit=${currentPage * PRODUCTS_LIMIT}`
     );
 
-    const newData = data?.map((product: ProductType) => ({
+    const newData = data.products?.map((product: ProductType) => ({
       ...product,
       price: (product.price * 83.97).toFixed(2),
     }));
@@ -161,31 +162,6 @@ const Home: React.FC = () => {
     }
   }, [search]);
 
-  // const filterProductsData = (category: string) => {
-  //   if (category === "all") {
-  //     setCurrentPage(1);
-
-  //     setCurrentItems(
-  //       products.slice(
-  //         currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
-  //         PRODUCTS_LIMIT * currentPage
-  //       )
-  //     );
-  //   } else {
-  //     const data = products?.filter(
-  //       (product) => product.category.toLowerCase() === category.toLowerCase()
-  //     );
-  //     setFilteredData(data);
-  //     setCurrentItems(
-  //       data.slice(
-  //         currentPage * PRODUCTS_LIMIT - PRODUCTS_LIMIT,
-  //         PRODUCTS_LIMIT * currentPage
-  //       )
-  //     );
-  //   }
-  //   setCurrentPage(1);
-  // };
-
   const sortByPrice = (type: string) => {
     switch (type) {
       case "LOW_TO_HIGH":
@@ -198,10 +174,12 @@ const Home: React.FC = () => {
           products?.sort(
             (product1, product2) => product1.price - product2.price
           );
-          setCurrentItems([...products].slice(
-            (currentPage - 1) * PRODUCTS_LIMIT,
-            currentPage * PRODUCTS_LIMIT
-          ));
+          setCurrentItems(
+            [...products].slice(
+              (currentPage - 1) * PRODUCTS_LIMIT,
+              currentPage * PRODUCTS_LIMIT
+            )
+          );
         } else {
           const sortedDatainAscOrder = Object.values(cachedData)
             .flat()
@@ -220,7 +198,7 @@ const Home: React.FC = () => {
         break;
 
       case "HIGH_TO_LOW":
-        if (search ) {
+        if (search) {
           filteredData?.sort(
             (product1, product2) => product2.price - product1.price
           );
@@ -229,10 +207,12 @@ const Home: React.FC = () => {
           products?.sort(
             (product1, product2) => product2.price - product1.price
           );
-          setCurrentItems([...products].slice(
-            (currentPage - 1) * PRODUCTS_LIMIT,
-            currentPage * PRODUCTS_LIMIT
-          ));
+          setCurrentItems(
+            [...products].slice(
+              (currentPage - 1) * PRODUCTS_LIMIT,
+              currentPage * PRODUCTS_LIMIT
+            )
+          );
         } else {
           const sortedDatainDescOrder = Object.values(cachedData)
             .flat()
@@ -362,7 +342,6 @@ const Home: React.FC = () => {
           </div> */}
         </div>
       </div>
-      
     </>
   );
 };

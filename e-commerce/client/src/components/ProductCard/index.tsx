@@ -3,14 +3,15 @@ import { ProductType } from "../../pages/Home";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 const ProductCard = ({ product }: { product: ProductType }) => {
-  const dispatch = useAppDispatch();
-  const cartItems = useAppSelector((store) => store.cart.cartItems);
+  // const dispatch = useAppDispatch();
+  // const cartItems = useAppSelector((store) => store.cart.cartItems);
+  console.log(product)
   return (
     <div className="border border-zinc-600 p-4 rounded-md flex flex-col gap-4 hover:border-zinc-400 hover:bg-zinc-900">
       <Link to={`/product/${product.id}`} className="space-y-4">
         <div className="w-full h-80 bg-white flex items-center justify-center rounded-md overflow-hidden">
           <img
-            src={product?.image}
+            src={product?.images[0]}
             alt={product.title}
             className="w-full h-full object-contain object-center rounded-md"
           />
