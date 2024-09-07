@@ -5,6 +5,7 @@ import Cart from "./components/Cart";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NoPage from "./pages/NoPage";
 const App = () => {
   return (
     <Router>
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />}/>
         <Route path="/register" element={<Register />}/>
         <Route path="/login" element={<Login />}/>
+        <Route path="/*" element={<NoPage />}/>
       </Routes>
     </Router>
   )
