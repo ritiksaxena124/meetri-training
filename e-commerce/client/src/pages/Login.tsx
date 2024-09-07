@@ -15,6 +15,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<UserTypes>({
+    mode:"onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -32,7 +33,7 @@ const Login = () => {
   return (
     <>
       <div className="w-full min-h-screen space-y-8 p-8">
-        <h1 className="text-3xl font-semibold max-w-2xl mx-auto">Login</h1>
+        <h1 className="text-3xl font-semibold max-w-2xl mx-auto">Welcome Back 👋</h1>
         <form
           action=""
           onSubmit={handleSubmit(onSubmit)}
@@ -43,7 +44,7 @@ const Login = () => {
               Email
             </label>
             <input
-              type="text"
+              type="email"
               placeholder="johndoe@gmail.com"
               className={`p-2 rounded-md outline-none indent-1 ${
                 errors.email
@@ -52,12 +53,20 @@ const Login = () => {
               }`}
               {...register("email", {
                 required: true,
+                validate: {
+                  matchPattern: (v) =>
+                    /^[a-zA-Z0-9._%±]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/.test(v),
+                },
               })}
             />
-            {errors.email && (
+            {errors.email?.type === "required" && (
               <span className="text-red-600 text-sm">
                 This field is required
               </span>
+            )}
+
+            {errors.email?.type === "matchPattern" && (
+              <span className="text-red-600 text-sm">Invalid email</span>
             )}
           </div>
           <div className="w-full flex flex-col gap-2">
@@ -76,7 +85,7 @@ const Login = () => {
                 required: true,
               })}
             />
-            {errors.password && (
+            {errors.password?.type === "required" && (
               <span className="text-red-600 text-sm">
                 This field is required
               </span>
@@ -86,7 +95,7 @@ const Login = () => {
             type="submit"
             className="px-3 py-2 rounded-md bg-white text-zinc-800 font-medium text-sm w-full hover:bg-zinc-100 hover:text-zinc-700"
           >
-            Submit
+            Login
           </button>
         </form>
       </div>
