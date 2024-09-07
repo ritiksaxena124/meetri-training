@@ -10,19 +10,22 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-          }/>
-        <Route path="/product/:id" element={<ProductPage />}/>
-        <Route path="/cart" element={<Cart />}/>
-        <Route path="/register" element={<Register />}/>
-        <Route path="/login" element={<Login />}/>
-        <Route path="/*" element={<NoPage />}/>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/*" element={<NoPage />} />
       </Routes>
     </Router>
-  )
+  );
 };
 
 export default App;
