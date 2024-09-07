@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
+import { SALT_ROUNDS } from 'src/constants';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,7 @@ export class AuthService {
 
   async registerUser(dto: registerUserDTO) {
     // Hash the password
-    const hash: string = await bcrypt.hash(dto.password, 10);
+    const hash: string = await bcrypt.hash(dto.password, SALT_ROUNDS);
     try {
       // create a user and save hash in-place of original password
       const user = await this.prisma.user.create({
@@ -32,7 +33,6 @@ export class AuthService {
           updatedAt: new Date(),
         },
       });
-
       //   Check if registering the user is successfull or not
       if (!user) {
         throw new Error('Unable to register user');
@@ -88,6 +88,8 @@ export class AuthService {
 
       response.cookie('access_token', `Bearer ${access_token}`, {
         httpOnly: true,
+        secure: true,
+        sameSite: false,
       });
 
       return {
